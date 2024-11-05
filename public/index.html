@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>Create Account</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
@@ -54,7 +54,7 @@
     
 
     <div class="container">
-        <h2 style="text-align: center;">User Registration</h2>
+        <h2 style="text-align: center;">Create Account</h2>
         <form id="registrationForm">
             <div class="form-control">
                 <label for="name">Name</label>
@@ -74,9 +74,10 @@
                 <label for="phone">Phone</label>
                 <div class="input-icon">
                     <i class="fas fa-phone"></i>
-                    <input type="text" id="phone" required placeholder="Enter your phone number">
+                    <input type="text" id="phone" required placeholder="Enter your phone number" value="+972">
                 </div>
             </div>
+            
             <div class="form-control">
                 <label for="password">Password</label>
                 <div class="input-icon">
@@ -150,35 +151,46 @@
                 window.location.href = 'delete.html'; // Navigate to the delete page
             });
 
-            // Handle registration form submission
-            document.getElementById("registrationForm").addEventListener("submit", async (event) => {
-                event.preventDefault(); // Prevent the default form submission
+  // Handle registration form submission
+document.getElementById("registrationForm").addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent the default form submission
 
-                const name = document.getElementById("name").value;
-                const email = document.getElementById("email").value;
-                const phone = document.getElementById("phone").value;
-                const password = document.getElementById("password").value;
-                const address = document.getElementById("address").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const password = document.getElementById("password").value;
+    const address = document.getElementById("address").value;
 
-                try {
-                    // Create user with email and password
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
+    // Add current timestamp for created_at
+    const createdAt = new Date();
 
-                    // Optionally save user details to Firestore
-                    await setDoc(doc(db, 'users', user.uid), {
-                        name: name,
-                        phone: phone,
-                        address: address
-                    });
+    // Define a sharable link format (modify as needed)
+    const sharableLink = `https://wa.me/${phone}`; // Adjust this as necessary based on your phone number format
 
-                    // Redirect to success page
-                    window.location.href = 'success.html'; // Replace with your actual success page URL
-                } catch (error) {
-                    console.error("Error during registration: ", error);
-                    alert("Registration failed: " + error.message);
-                }
-            });
+    try {
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save user details to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+            email: email,
+            phone: phone,
+            address: address,
+            created_at: createdAt, // Store timestamp
+            image: "https://firebasestorage.googleapis.com/v0/b/maintance-f744d.appspot.com/o/b.jpg?alt=media&token=8efeaa80-ae3c-4ac9-a9ed-6b7fc9d58ec3", // Static image URL
+            nickname: name, // Static nickname
+            sharableLink: sharableLink // Generated sharable link
+        });
+
+        // Redirect to success page
+        window.location.href = 'success.html'; // Replace with your actual success page URL
+    } catch (error) {
+        console.error("Error during registration: ", error);
+        alert("Registration failed: " + error.message);
+    }
+});
+
         });
     </script>
 
