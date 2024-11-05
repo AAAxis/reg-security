@@ -1,89 +1,186 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/11.0.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/11.0.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/11.0.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .form-control { margin-bottom: 20px; }
+        .form-control label { display: block; margin-bottom: 5px; color: #333; }
+        .form-control input, .form-control select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-control .input-icon { position: relative; }
+        .form-control .input-icon i { position: absolute; left: 10px; top: 12px; color: #aaa; }
+        .form-control input[type="text"], input[type="email"], input[type="password"] { padding-left: 30px; }
+        button { width: 100%; padding: 15px; background-color: #007BFF; color: #fff; border: none; border-radius: 4px; font-size: 18px; cursor: pointer; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .message { display: none; text-align: center; color: green; font-size: 16px; margin-top: 20px; }
+        .link { display: block; text-align: center; margin-top: 20px; color: #007BFF; text-decoration: none; cursor: pointer; }
+        .link:hover { text-decoration: underline; }
+      
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
-      });
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            text-align: center; /* Center the text */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="maintenanceModal" class="modal">
+        <div class="modal-content">
+            <h2>Site Under Maintenance</h2>
+            <p>Please check back later.</p>
+        </div>
+    </div>
+    
+
+    <div class="container">
+        <h2 style="text-align: center;">User Registration</h2>
+        <form id="registrationForm">
+            <div class="form-control">
+                <label for="name">Name</label>
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" required placeholder="Enter your name">
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="email">Email</label>
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="phone">Phone</label>
+                <div class="input-icon">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" id="phone" required placeholder="Enter your phone number">
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="password">Password</label>
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" required minlength="6" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="address">Select Address</label>
+                <select id="address">
+                    <option value="">-- Choose an address --</option>
+                </select>
+            </div>
+            <button type="submit">Join</button>
+        </form>
+        <a class="link" id="deleteAccountLink">Click here to request account deletion</a>
+
+        <div class="message" id="successMessage">
+            Registration Successful. Now you can close this page. Wait for email confirmation.
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
+        import { getFirestore, collection,setDoc, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2GFUlzzcQcObZe63Nfq0FopQ-Z-3pz8c",
+            authDomain: "maintance-f744d.firebaseapp.com",
+            projectId: "maintance-f744d",
+            storageBucket: "maintance-f744d.appspot.com",
+            messagingSenderId: "8110435803",
+            appId: "1:8110435803:web:bc10779377fbed2055cbfe",
+            measurementId: "G-6P3K9B0017"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app); // Initialize Firebase Authentication
+
+        // Listen for maintenance status in the 'settings' collection, document 'status'
+        const maintenanceModal = document.getElementById("maintenanceModal");
+
+        onSnapshot(doc(db, 'settings', 'status'), (doc) => {
+            const data = doc.data();
+            if (data && data.maintenance) {
+                maintenanceModal.style.display = "block"; // Show modal if maintenance is true
+            } else {
+                maintenanceModal.style.display = "none"; // Hide modal if maintenance is false
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const addressSelect = document.getElementById("address");
+
+            try {
+                const snapshot = await getDocs(collection(db, 'markers'));
+                snapshot.forEach(doc => {
+                    const address = doc.data().name;
+                    const option = document.createElement("option");
+                    option.value = address;
+                    option.textContent = address;
+                    addressSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching addresses: ", error);
+            }
+
+            document.getElementById("deleteAccountLink").addEventListener("click", () => {
+                window.location.href = 'delete.html'; // Navigate to the delete page
+            });
+
+            // Handle registration form submission
+            document.getElementById("registrationForm").addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent the default form submission
+
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+                const password = document.getElementById("password").value;
+                const address = document.getElementById("address").value;
+
+                try {
+                    // Create user with email and password
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Optionally save user details to Firestore
+                    await setDoc(doc(db, 'users', user.uid), {
+                        name: name,
+                        phone: phone,
+                        address: address
+                    });
+
+                    // Redirect to success page
+                    window.location.href = 'success.html'; // Replace with your actual success page URL
+                } catch (error) {
+                    console.error("Error during registration: ", error);
+                    alert("Registration failed: " + error.message);
+                }
+            });
+        });
     </script>
-  </body>
+
+</body>
 </html>

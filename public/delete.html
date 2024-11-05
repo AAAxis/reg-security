@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deletion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .form-control { margin-bottom: 20px; }
+        .form-control label { display: block; margin-bottom: 5px; color: #333; }
+        .form-control input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 15px; background-color: #007BFF; color: #fff; border: none; border-radius: 4px; font-size: 18px; cursor: pointer; }
+        .link { display: block; text-align: center; margin-top: 20px; color: #007BFF; text-decoration: none; cursor: pointer; }
+        .link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center;">Request Account Deletion</h2>
+    <div class="form-control">
+        <label for="deleteEmail">Email</label>
+        <input type="email" id="deleteEmail" placeholder="Enter your email" required>
+    </div>
+    <div class="form-control">
+        <label for="deletePassword">Password</label>
+        <input type="password" id="deletePassword" placeholder="Enter your password" required>
+    </div>
+    <button id="submitDeleteRequestBtn">Delete Account</button>
+    <a class="link" href="index.html">Click here to create an account</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js";
+    import { getFirestore, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC2GFUlzzcQcObZe63Nfq0FopQ-Z-3pz8c",
+        authDomain: "maintance-f744d.firebaseapp.com",
+        projectId: "maintance-f744d",
+        storageBucket: "maintance-f744d.appspot.com",
+        messagingSenderId: "8110435803",
+        appId: "1:8110435803:web:bc10779377fbed2055cbfe",
+        measurementId: "G-6P3K9B0017"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    async function submitDeleteRequest() {
+        const deleteEmail = document.getElementById("deleteEmail").value;
+        const deletePassword = document.getElementById("deletePassword").value;
+
+        if (deleteEmail && deletePassword) {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, deleteEmail, deletePassword);
+                const user = userCredential.user;
+
+                // Delete user data from Firestore
+                await deleteDoc(doc(db, 'users', user.uid));
+          
+                // Delete user from Firebase Authentication
+                await deleteUser(user);
+                
+                // Redirect to success page
+                window.location.href = 'success.html'; // Replace with your actual success page URL
+            } catch (error) {
+                console.error("Error during account deletion: ", error);
+                let errorMessage = "An error occurred. Please try again.";
+
+                // Provide specific feedback based on the error code
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = "User not found. Please check your email.";
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = "Incorrect password. Please try again.";
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = "The email address is not valid.";
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+
+                alert("Error during account deletion: " + errorMessage);
+            }
+        } else {
+            alert("Please enter your email and password.");
+        }
+    }
+
+    document.getElementById("submitDeleteRequestBtn").addEventListener("click", submitDeleteRequest);
+</script>
+
+</body>
+</html>
